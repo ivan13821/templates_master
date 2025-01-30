@@ -30,28 +30,32 @@ def generate_pdf():
 
     context = json.dumps({
         "file_name": "Приказ_о_заявлении_для_налоговой",
-        "name":"Иван",
-        "DateRegistr":"27.01.2025", 
-        "phone":"89011100011",
-        "email":"easy@gamil.com",
-        "ContractNumber":"111",
-        "lastname":"иванов",
-        "firstname":"Иван",
-        "surname":"Иваныч",
-        "DateOfBirth":"123123",
-        "PassportSeries":"123123",
-        "PassportNumber":"123123",
-        "PassportIssued":"123123",
-        "inn":"123123",
-        "StudentLastname":"123123",
-        "StudentFirstname":"123123",
-        "StudentSurname":"123123",
-        "StudentDateOfBirth":"123123",
-        "StudentPassportSeries":"123123",
-        "StudentPassportNumber":"123123",
-        "StudentPassportIssued":"123123",
-        "StudentINN":"123123",
-        "date":"123123"
+        "context":
+        {
+            "name":"Иван",
+            "DateRegistr":"27.01.2025", 
+            "phone":"89011100011",
+            "email":"easy@gamil.com",
+            "ContractNumber":"111",
+            "lastname":"иванов",
+            "firstname":"Иван",
+            "surname":"Иваныч",
+            "DateOfBirth":"123123",
+            "PassportSeries":"123123",
+            "PassportNumber":"123123",
+            "PassportIssued":"123123",
+            "inn":"123123",
+            "StudentLastname":"123123",
+            "StudentFirstname":"123123",
+            "StudentSurname":"123123",
+            "StudentDateOfBirth":"123123",
+            "StudentPassportSeries":"123123",
+            "StudentPassportNumber":"123123",
+            "StudentPassportIssued":"123123",
+            "StudentINN":"123123",
+            "date":"123123"
+        },
+        "signature":""
     })
 
     data = requests.post(url="http://127.0.0.1:8000/", data=context)
@@ -62,4 +66,4 @@ def generate_pdf():
 
 
 generate_pdf()
-test_add_file()
+#test_add_file()

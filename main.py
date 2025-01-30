@@ -40,9 +40,7 @@ async def generate_pdf(data = Body()):
     task = asyncio.create_task(trash_killer(filename=file_name))
     del data["file_name"]
 
-    print(1)
-
-    return FileAction.generete_pdf(context=data, file_name=file_name)
+    return FileAction.generete_pdf(context=data["context"], file_name=file_name)
 
 
 
