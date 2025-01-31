@@ -4,8 +4,7 @@ from docxtpl import DocxTemplate
 from docx2pdf import convert
 import os
 from fastapi.responses import FileResponse
-
-
+import asyncio
 
 
 
@@ -77,7 +76,56 @@ class FileAction:
     @staticmethod
     def test(folder: str, file_name: str) -> bool:
 
+        """Проверяет наличие файла в директории"""
+
         try:
             open(f"{folder}/{file_name}.docx")
             return True
         except: return False 
+    
+
+
+
+
+
+
+
+
+    @staticmethod
+    async def trash_killer(filename: str):
+
+        """Убивает ненужные файлы спустя 5 секунд после вызова"""
+
+        await asyncio.sleep(5)
+
+        try:
+            os.remove(f"created/{filename}.pdf")
+        except:
+            pass
+    
+
+
+
+
+    @staticmethod
+    def del_file(filename: str, folder: str = "templates") -> str:
+        
+        """Удаляет файл из каталога """
+        print(os.listdir(folder))
+
+        if f"{filename}.docx" in os.listdir(folder):
+            os.remove(f"{folder}/{filename}.docx")
+            return {"message":"file deleted"}
+        else:
+            return {"message": "no such file exists"}
+    
+
+
+
+    @staticmethod
+    def get_file_response(filename: str, folder: str = "templates"):
+
+        if f"{filename}.docx" in os.listdir(folder):
+            return FileResponse(path=f'{folder}/{filename}.docx', filename=f'{filename}.docx', media_type='multipart/form-data')
+        else:
+            return {"message": "file is not exists"}

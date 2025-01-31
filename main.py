@@ -1,28 +1,16 @@
 
-from fastapi import FastAPI, Body, UploadFile, File, HTTPException
-from fastapi.responses import FileResponse
-from typing import Annotated
-import os
+from fastapi import FastAPI, Body, UploadFile, File
 import asyncio
 
 
-from actions_with_files.main import FileAction
-
+from repository.files import FileAction
+from service.handler import Handler
+from service.data_verification import DataVerification
+from models.main import *
 
 app = FastAPI()
 
 
-
-
-
-async def trash_killer(filename):
-    """Убивает ненужные файлы"""
-
-    await asyncio.sleep(5)
-
-
-    os.remove(f"created/{filename}.pdf")
-    
 
 
 
@@ -32,14 +20,11 @@ async def trash_killer(filename):
 
 
 #Получение данных формы для заполнения шаблона 
-@app.post("/")
+@app.post("/gen")
 async def generate_pdf(data = Body()):
-
-
+    if not DataVerification.get_file(data): return {"error": "missing json"}
     file_name = data["file_name"]
-    task = asyncio.create_task(trash_killer(filename=file_name))
-    del data["file_name"]
-
+    task =asyncio.create_task(FileAction.trash_killer(filename=file_name))
     return FileAction.generete_pdf(context=data["context"], file_name=file_name)
 
 
@@ -49,23 +34,29 @@ async def generate_pdf(data = Body()):
 
 
 #Скачивание файла пользователем
-@app.get("/file/download")
-def download_file(data = Body()):
+@app.get("/download")
+def download_file(data: DownloadFile):
+    return FileAction.get_file_response(folder="templates", filename=data.filename)
 
-    try:
-        filename = data["filename"]
-        return FileResponse(path=f'templates/{filename}.docx', filename=f'{filename}.docx', media_type='multipart/form-data')
-    except KeyError:
-        return {"message": "file is not exists"}
+
+
 
 
 
 #Скачивание файла полученного от пользователя
-@app.post("/upload")
+@app.post("/add")
 def upload(file: UploadFile = File(...)):
-
     message = FileAction.save_file(file=file)
-
     return {"message": message}
+
+
+
+
+
+
+#Удаление файла пользователем
+@app.delete("/delete")
+def delete_file(data: DelFile):
+    return {"message":FileAction.del_file(filename=data.filename)}
 
 

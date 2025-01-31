@@ -3,13 +3,13 @@ import requests
 import json
 
 def test_add_file():
-    file_name = "Приказ_о_заявлении_для_налоговой.docx"
-    file = open(f"templates/{file_name}", "rb")
+    file_name = "воросы для бота ЕСД.docx"
+    file = open(f"{file_name}", "rb")
 
 
 
     test_response = requests.post(
-    "http://127.0.0.1:8000/upload", 
+    "http://127.0.0.1:8000/add", 
     data={
         'filename': file_name,
         "type" : "multipart/form-data"
@@ -30,6 +30,7 @@ def generate_pdf():
 
     context = json.dumps({
         "file_name": "Приказ_о_заявлении_для_налоговой",
+        "download_type": "pdf",
         "context":
         {
             "name":"Иван",
@@ -55,15 +56,65 @@ def generate_pdf():
             "StudentINN":"123123",
             "date":"123123"
         },
-        "signature":""
+        "tables": {},
+        "meta_data": {}
     })
 
-    data = requests.post(url="http://127.0.0.1:8000/", data=context)
+    data = requests.post(url="http://127.0.0.1:8000/gen", data=context)
+
+    print(data.content)
 
     with open(f"Приказ_о_заявлении_для_налоговой.pdf", 'wb') as f:
         f.write(data.content)
     
 
 
+
+
+
+
+
+
+
+def download():
+
+    filename = "Приказ_о_заявлении_для_налоговой"
+
+    data = json.dumps({"filename":filename})
+
+    data = requests.get(url="http://127.0.0.1:8000/download", data=data)
+
+
+    print(data.content)
+
+    with open(f"Приказ_о_заявлении_для_налоговой.docx", 'wb') as f:
+        f.write(data.content)
+
+
+
+
+
+
+def delete():
+
+    filename = "документация по API документов"
+
+    data = json.dumps({"filename":filename})
+
+    data = requests.delete(url="http://127.0.0.1:8000/delete", data=data)
+
+
+    print(data.content)
+
+
+
+
+
+
 generate_pdf()
+
 #test_add_file()
+
+download()
+
+# delete()
