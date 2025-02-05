@@ -25,6 +25,9 @@ ENV TZ="Europe/Samara"
 
 WORKDIR /
 
+
+COPY created/. created/
+COPY templates/. templates/
 COPY requirements.txt requirements.txt
 COPY models/. models/
 COPY repository/. repository/
@@ -35,11 +38,10 @@ COPY config.py config.py
 COPY main.py main.py
 
 RUN pip install -r requirements.txt
-RUN chmod +x bot_start.py
-RUN pip install uvicorn
+RUN chmod +x main.py
 
 RUN locale-gen ru_RU
 RUN locale-gen ru_RU.UTF-8
 RUN update-locale
 
-CMD python3 uvicorn main:app;
+CMD uvicorn main:app;
