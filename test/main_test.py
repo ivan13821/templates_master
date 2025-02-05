@@ -94,6 +94,29 @@ def download():
 
 
 
+def gen_pdf_2():
+    context = json.dumps({
+        "file_name": "Справка_об_оплате_образовательных_услуг",
+        "download_type": "pdf",
+        "context":
+        {
+            "owner":"Сафаров И.О."
+        },
+        "tables": {},
+        "meta_data": {}
+    })
+
+    data = requests.post(url="http://127.0.0.1:8000/gen", data=context)
+
+    print(data.content)
+
+    with open(f"Приказ_о_заявлении_для_налоговой.pdf", 'wb') as f:
+        f.write(data.content)
+
+
+
+
+
 
 def delete():
 
@@ -111,10 +134,12 @@ def delete():
 
 
 
-generate_pdf()
+#generate_pdf()
 
 #test_add_file()
 
-download()
+#download()
 
 # delete()
+
+gen_pdf_2()
