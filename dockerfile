@@ -37,6 +37,8 @@ COPY config.ini config.ini
 COPY config.py config.py
 COPY main.py main.py
 
+RUN apt --force-yes -y install libreoffice-writer
+
 RUN pip install -r requirements.txt
 RUN chmod +x main.py
 
@@ -44,4 +46,4 @@ RUN locale-gen ru_RU
 RUN locale-gen ru_RU.UTF-8
 RUN update-locale
 
-CMD uvicorn main:app;
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

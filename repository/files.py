@@ -1,10 +1,23 @@
 
 from fastapi import UploadFile, HTTPException
 from docxtpl import DocxTemplate
+from docx import Document
 from docx2pdf import convert
 import os
 from fastapi.responses import FileResponse
 import asyncio
+import subprocess
+
+def generate_pdf(doc_path, path):
+
+    subprocess.call(['soffice',
+                 # '--headless',
+                 '--convert-to',
+                 'pdf',
+                 '--outdir',
+                 path,
+                 doc_path])
+    return doc_path
 
 
 
@@ -61,7 +74,12 @@ class FileAction:
         doc.save(f"{created_folder}/{file_name}.docx")
 
 
+        # doc = Document(f"{created_folder}/{file_name}.docx").paragraphs
+        # for i in doc:
+        #     print(i.text)
+
         convert(f"{created_folder}/{file_name}.docx")
+        #generate_pdf(f"{created_folder}/", f"{created_folder}/{file_name}.docx")
 
         os.remove(f"{created_folder}/{file_name}.docx")
 
